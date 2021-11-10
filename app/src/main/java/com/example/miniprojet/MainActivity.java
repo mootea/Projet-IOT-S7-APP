@@ -1,12 +1,12 @@
 package com.example.miniprojet;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 selectLum.setBackgroundColor(Color.BLUE);
                 selectTemp.setBackgroundColor(Color.BLACK);
-                sendJForward("1");
+                send_message.send("1");
             }
         });
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 selectTemp.setBackgroundColor(Color.BLUE);
                 selectLum.setBackgroundColor(Color.BLACK);
-                sendJForward("2");
+                send_message.send("2");
             }
         });
 
@@ -95,10 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
         displayingLum.setVisibility(View.VISIBLE);
         displayingTemp.setVisibility(View.VISIBLE);
-    }
-
-    private void sendJForward(String whichSensor){
-        send_message.send(whichSensor);
     }
 
     @Override

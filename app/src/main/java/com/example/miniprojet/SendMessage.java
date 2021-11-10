@@ -1,5 +1,7 @@
 package com.example.miniprojet;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -27,6 +29,7 @@ public class SendMessage extends Thread {
     }
 
     public void send(String data){
+        Log.e("message_internal", data);
         pile.add(data);
         sem.release();
     }
