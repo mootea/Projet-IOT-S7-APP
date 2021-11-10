@@ -33,7 +33,6 @@ public class ReceiverTask extends AsyncTask<Void, byte[], Void> {
 
     // Espace de réception des données.
     protected void onProgressUpdate(byte[]... data) {
-        String data_string = new String(data[0]);
-        listen.listen(data_string);
+        listen.listen(new String(data[0]), new String(data[1]));
     }
 }
