@@ -65,18 +65,16 @@
             android:text="Température" />
 
         <TextView
-            android:id="@+id/displayingLum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="r"
-            android:visibility="invisible" />
+                android:id="@+id/displayingLum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
         <TextView
-            android:id="@+id/displayingTemp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="r"
-            android:visibility="invisible" />
+                android:id="@+id/displayingTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
     </LinearLayout>
 

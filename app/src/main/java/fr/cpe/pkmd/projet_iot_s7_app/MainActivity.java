@@ -1,8 +1,8 @@
+
 package fr.cpe.pkmd.projet_iot_s7_app;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,9 +17,7 @@ import java.net.SocketException;
 public class MainActivity extends AppCompatActivity {
     private TextView ip;
     private TextView port;
-    private InetAddress address;
     private DatagramSocket UDPSocket;
-    private int PORT;
     private Button selectLum;
     private Button selectTemp;
     private TextView displayingLum;
@@ -78,7 +76,24 @@ public class MainActivity extends AppCompatActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                displayingLum.setText("Chargement...");
+                displayingLum.setVisibility(View.VISIBLE);
+                displayingTemp.setVisibility(View.INVISIBLE);
                 send_message.send("3");
+            }
+        });
+
+        ip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reset_ihm();
+            }
+        });
+
+        port.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reset_ihm();
             }
         });
 
@@ -91,22 +106,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void initNetworking(){
         try { // Choix du port local laissé à la discrétion de la plateforme
-            address = InetAddress.getByName(ip.getText().toString());
-            PORT = Integer.parseInt(port.getText().toString());
+            InetAddress address = InetAddress.getByName(ip.getText().toString());
+            int PORT = Integer.parseInt(port.getText().toString());
 
             send_message = new SendMessage(UDPSocket, address, PORT);
 
             send_message.start();
 
-            Listen listener = new Listen() {
-                /*@Override
-                public void listen(String lum, String temp) {
-                    displayResult(lum, temp);
-                }*/
+            connect.setEnabled(false);
+            selectLum.setEnabled(true);
+            selectTemp.setEnabled(true);
+            update.setEnabled(true);
 
+            Listen listener = new Listen() {
                 @Override
-                public void listen(String lum) {
-                    displayResult(lum, "ezez");
+                public void listen(String temp, String lum) {
+                    displayResult(temp, lum);
                 }
             };
             (new ReceiverTask(UDPSocket, listener)).execute();
@@ -117,20 +132,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void displayResult(String lum, String temp){
-        // Affiche et reset le jeu en cas de win / loose
-        Log.e("e","lalala");
-        displayingLum.setText(lum);
-        displayingTemp.setText(temp);
+    private void displayResult(String temp, String lum){
+
+        String display_lum = lum + " lux";
+        String display_temp = temp + "°C";
+
+        displayingLum.setText(display_lum);
+        displayingTemp.setText(display_temp);
 
         displayingLum.setVisibility(View.VISIBLE);
         displayingTemp.setVisibility(View.VISIBLE);
     }
 
+    private void reset_ihm(){
+        connect.setEnabled(true);
+
+        selectTemp.setBackgroundColor(Color.BLUE);
+        selectLum.setBackgroundColor(Color.BLUE);
+
+        selectLum.setEnabled(false);
+        selectTemp.setEnabled(false);
+        update.setEnabled(false);
+
+        displayingLum.setText(null);
+        displayingTemp.setText(null);
+
+        displayingLum.setVisibility(View.INVISIBLE);
+        displayingTemp.setVisibility(View.INVISIBLE);
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        initNetworking();
+        reset_ihm();
     }
 }
 
