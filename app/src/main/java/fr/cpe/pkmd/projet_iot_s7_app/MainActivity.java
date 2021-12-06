@@ -33,23 +33,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
-            UDPSocket = new DatagramSocket();
+            UDPSocket = new DatagramSocket();   //Ouverture du socket UDP pour communiquer avec les microcontrolleurs
         } catch (SocketException e) {
             e.printStackTrace();
         }
 
+        //Récupération des identifiants graphiques
         ip = findViewById(R.id.ip);
         port = findViewById(R.id.port);
         displayingLum = findViewById(R.id.displayingLum);
         displayingTemp = findViewById(R.id.displayingTemp);
         connect = findViewById(R.id.connect);
         update = findViewById(R.id.update);
-
         selectLum = findViewById(R.id.selectLum);
         selectTemp = findViewById(R.id.selectTemp);
         selectLum.setBackgroundColor(Color.BLUE);
         selectTemp.setBackgroundColor(Color.BLUE);
 
+        //On sélectionne la luminosité à afficher en premier
         selectLum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //On sélectionne la température à afficher en premier
         selectTemp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,12 +69,16 @@ public class MainActivity extends AppCompatActivity {
                 send_message.send("2");
             }
         });
+
+        //Initialise la connexion
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 initNetworking();
             }
         });
+
+        //Bouton qui permet d'aller chercher sur les controlleurs les informations de luminosité à afficher sur le téléphone
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Réinitialise l'IHM
         ip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Réinitialise l'IHM
         port.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,18 +114,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void initNetworking(){
         try { // Choix du port local laissé à la discrétion de la plateforme
-            InetAddress address = InetAddress.getByName(ip.getText().toString());
-            int PORT = Integer.parseInt(port.getText().toString());
+            InetAddress address = InetAddress.getByName(ip.getText().toString());   //Récupère adresse IP écrite par l'utilisateur
+            int PORT = Integer.parseInt(port.getText().toString()); //Récupère le port écrite par l'utilisateur
 
-            send_message = new SendMessage(UDPSocket, address, PORT);
+            send_message = new SendMessage(UDPSocket, address, PORT);   //Init le socket d'envoie de messages avec les infos ci-dessus
 
-            send_message.start();
+            send_message.start();   //Ouvre le socket
 
             connect.setEnabled(false);
             selectLum.setEnabled(true);
             selectTemp.setEnabled(true);
             update.setEnabled(true);
 
+            //Listener quu écoute le changement de résultat et qui les importe dans ce fichier
             Listen listener = new Listen() {
                 @Override
                 public void listen(String temp, String lum) {
@@ -132,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Affiche sur le téléphone les résultats de retour donnés par les controlleurs
     private void displayResult(String temp, String lum){
 
         String display_lum = lum + " lux";
@@ -144,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         displayingTemp.setVisibility(View.VISIBLE);
     }
 
+    //Réinitialise l'IHM comme à son début
     private void reset_ihm(){
         connect.setEnabled(true);
 

@@ -19,15 +19,17 @@ public class SendMessage extends Thread {
 
     private List<String> pile = new ArrayList<>();
 
+    //Sémaphore qui va gérer la synchronisation des threads
     private Semaphore sem = new Semaphore(0);
 
-
+    //Initialise la classe à l'aide d'un socket à l'aide d'une IP et d'un port donné
     public SendMessage(DatagramSocket socket, InetAddress address, int port){
         IP = address;
         PORT = port;
         UDPSocket = socket;
     }
 
+    //Envoie le message (ajout dans la pile d'envoie et synchronisation à l'aide du sémaphore)
     public void send(String data){
         Log.e("message_internal", data);
         pile.add(data);
@@ -40,6 +42,7 @@ public class SendMessage extends Thread {
             try {
                 sem.acquire();
 
+                //Envoie les paquets
                 byte[] data = pile.get(0).getBytes(StandardCharsets.UTF_8);
                 DatagramPacket packet = new DatagramPacket(data, data.length, IP, PORT);
                 UDPSocket.send(packet);

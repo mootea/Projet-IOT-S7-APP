@@ -7,15 +7,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Arrays;
 
+//Reçoit les informations du socket et les redirige
 public class ReceiverTask extends AsyncTask<Void, byte[], Void> {
     private DatagramSocket UDPSocket;
     private Listen listen;
 
-
+    //Constructeur
     public ReceiverTask(DatagramSocket socket, Listen listener){
         listen = listener;
         UDPSocket = socket;
     }
+
+    //Publie les données reçues
     @Override
     protected Void doInBackground(Void... voids) {
         while (true) {
@@ -31,7 +34,7 @@ public class ReceiverTask extends AsyncTask<Void, byte[], Void> {
         }
     }
 
-    // Espace de réception des données.
+    // Espace de réception des données
     protected void onProgressUpdate(byte[]... data) {
         String[] response = new String(data[0]).split(";");
 
